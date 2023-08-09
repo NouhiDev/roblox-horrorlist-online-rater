@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Game Rating Calculator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            margin: 0;
+        }
+
+        .container {
+            display: flex;
+            justify-content: space-between;
+            padding: 20px;
+        }
+
+        .form-column {
+            flex: 1;
+            padding: 20px;
+            background-color: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            margin-bottom: 20px;
+        }
+
+        h2 {
+            margin-bottom: 10px;
+        }
+
+        label,
+        input {
+            display: block;
+            margin-bottom: 10px;
+        }
+
+        button {
+            padding: 8px 16px;
+            background-color: #007bff;
+            color: #ffffff;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        #result {
+            font-size: 18px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="form-column">
+            <h2>Adjust Weights</h2>
+            <form id="weightsForm">
+                <label for="scarinessWeight">Scariness Weight:</label>
+                <input type="number" id="scarinessWeight" name="scarinessWeight" min="0" step="0.01" value="0.19"><br>
+
+                <label for="soundDesignWeight">Sound Design Weight:</label>
+                <input type="number" id="soundDesignWeight" name="soundDesignWeight" min="0" step="0.01" value="0.12"><br>
+
+                <label for="storyWeight">Story Weight:</label>
+                <input type="number" id="storyWeight" name="storyWeight" min="0" step="0.01" value="0.10"><br>
+
+                <label for="visualsWeight">Visuals Weight:</label>
+                <input type="number" id="visualsWeight" name="visualsWeight" min="0" step="0.01" value="0.10"><br>
+
+                <label for="ambienceWeight">Ambience Weight:</label>
+                <input type="number" id="ambienceWeight" name="ambienceWeight" min="0" step="0.01" value="0.12"><br>
+
+                <label for="gameplayWeight">Gameplay Weight:</label>
+                <input type="number" id="gameplayWeight" name="gameplayWeight" min="0" step="0.01" value="0.19"><br>
+
+                <label for="creativityWeight">Creativity Weight:</label>
+                <input type="number" id="creativityWeight" name="creativityWeight" min="0" step="0.01" value="0.07"><br>
+
+                <label for="enjoymentWeight">Enjoyment Weight:</label>
+                <input type="number" id="enjoymentWeight" name="enjoymentWeight" min="0" step="0.01" value="0.04"><br>
+
+                <label for="productionQualityWeight">Production Quality Weight:</label>
+                <input type="number" id="productionQualityWeight" name="productionQualityWeight" min="0" step="0.01" value="0.04"><br>
+
+                <label for="technicalWeight">Technical Weight:</label>
+                <input type="number" id="technicalWeight" name="technicalWeight" min="0" step="0.01" value="0.03"><br>
+
+                <button type="button" onclick="updateWeights()">Update Weights</button>
+            </form>
+        </div>
+
+        <div class="form-column">
+            <h1>Game Rating Calculator</h1>
+            <form id="ratingForm">
+                <label for="scariness">Scariness:</label>
+                <input type="number" id="scariness" name="scariness" min="0" max="10"><br>
+
+                <label for="soundDesign">Sound Design:</label>
+                <input type="number" id="soundDesign" name="soundDesign" min="0" max="10"><br>
+
+                <label for="story">Story:</label>
+                <input type="number" id="story" name="story" min="0" max="10"><br>
+
+                <label for="visuals">Visuals:</label>
+                <input type="number" id="visuals" name="visuals" min="0" max="10"><br>
+
+                <label for="ambience">Ambience:</label>
+                <input type="number" id="ambience" name="ambience" min="0" max="10"><br>
+
+                <label for="gameplay">Gameplay:</label>
+                <input type="number" id="gameplay" name="gameplay" min="0" max="10"><br>
+
+                <label for="creativity">Creativity:</label>
+                <input type="number" id="creativity" name="creativity" min="0" max="10"><br>
+
+                <label for="enjoyment">Enjoyment:</label>
+                <input type="number" id="enjoyment" name="enjoyment" min="0" max="10"><br>
+
+                <label for="productionQuality">Production Quality:</label>
+                <input type="number" id="productionQuality" name="productionQuality" min="0" max="10"><br>
+
+                <label for="technical">Technical:</label>
+                <input type="number" id="technical" name="technical" min="0" max="10"><br>
+
+                <button type="button" onclick="calculateRating()">Calculate Rating</button>
+            </form>
+
+            <p id="result"></p>
+        </div>
+    </div>
+
+    <script>
+        document.body.style.zoom = 0.9;
+
+        const defaultWeights = {
+            scariness: 0.19,
+            soundDesign: 0.12,
+            story: 0.10,
+            visuals: 0.10,
+            ambience: 0.12,
+            gameplay: 0.19,
+            creativity: 0.07,
+            enjoyment: 0.04,
+            productionQuality: 0.04,
+            technical: 0.03
+        };
+
+        let currentWeights = Object.assign({}, defaultWeights);
+
+        function updateWeights() {
+            const inputs = document.getElementById("weightsForm").elements;
+
+            for (const input of inputs) {
+                if (input.type === "number") {
+                    const weightName = input.name;
+                    const newWeight = parseFloat(input.value);
+                    if (!isNaN(newWeight)) {
+                        currentWeights[weightName] = newWeight;
+                    }
+                }
+            }
+
+            alert("Weights updated successfully!");
+        }
+
+        function calculateRating() {
+            const inputs = document.getElementById("ratingForm").elements;
+            let totalRating = 0;
+
+            for (const input of inputs) {
+                if (input.type === "number") {
+                    const weight = currentWeights[input.name];
+                    const rating = parseInt(input.value, 10);
+                    if (!isNaN(rating)) {
+                        totalRating += weight * rating;
+                    }
+                }
+            }
+
+            document.getElementById("result").textContent = "Total Rating: " + totalRating.toFixed(2);
+        }
+    </script>
+</body>
+
+</html>
